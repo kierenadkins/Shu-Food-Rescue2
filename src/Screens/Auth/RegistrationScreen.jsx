@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Text, TextInput, TouchableOpacity, View, SafeAreaView } from "react-native";
 import { useSignUp } from "@clerk/clerk-expo";
  
 export default function SignUpScreen() {
@@ -54,7 +54,7 @@ export default function SignUpScreen() {
   };
  
   return (
-    <View>
+    <SafeAreaView className="bg-white flex-1 ">
       {!pendingVerification && (
         <View>
           <View>
@@ -111,6 +111,6 @@ export default function SignUpScreen() {
           </TouchableOpacity>
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 }

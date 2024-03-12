@@ -6,6 +6,7 @@ import LoginScreen from './src/Screens/Auth/LoginScreen';
 import * as SecureStore from "expo-secure-store";
 import { NavigationContainer } from "@react-navigation/native";
 import TabNavigation from "./src/Navigations/TabNavigation";
+import AuthStackNavigation from "./src/Navigations/AuthStackNavigation";
 
 const tokenCache = {
   async getToken(key) {
@@ -36,7 +37,9 @@ export default function App() {
           </NavigationContainer>
         </SignedIn>
         <SignedOut>
-          <LoginScreen />
+          <NavigationContainer>
+            <AuthStackNavigation />
+          </NavigationContainer>
         </SignedOut>
       </View>
     </ClerkProvider>

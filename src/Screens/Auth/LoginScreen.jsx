@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View, Image, SafeAreaView } from "react-native";
 import { useSignIn } from "@clerk/clerk-expo";
+import { useNavigation } from '@react-navigation/native';
  
 export default function SignInScreen() {
   const { signIn, setActive, isLoaded } = useSignIn();
  
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigation = useNavigation();
+
+  const handlePress = () => {
+    navigation.push('Registration')};
  
   const onSignInPress = async () => {
     if (!isLoaded) {
@@ -25,6 +31,8 @@ export default function SignInScreen() {
       console.log(err);
     }
   };
+
+  
   
   return (
     <SafeAreaView className="bg-white flex-1 ">
@@ -52,7 +60,7 @@ export default function SignInScreen() {
         <TouchableOpacity className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline md:py-3 md:px-6" onPress={onSignInPress}>
           <Text className="text-center">Sign in</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="mt-4" onPress={onSignInPress}>
+        <TouchableOpacity className="mt-4" onPress={handlePress}>
           <Text className="text-center">Not got an account?</Text>
         </TouchableOpacity>
         </View>
