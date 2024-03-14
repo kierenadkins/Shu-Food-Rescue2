@@ -8,6 +8,8 @@ import RightHeader from '../Components/Header/RightHeader';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ListingScreenNavi from './ListingStackNavigation';
+import Profile from '../Screens/Auth/Profile';
+import ProfileStackNav from './ProfileStackNav';
 
 const Tab = createBottomTabNavigator();
 
@@ -54,7 +56,7 @@ export default function TabNavigation() {
           )
         }}
       />
-      <Tab.Screen name="Listing" component={RecipeScreen} 
+      <Tab.Screen name="Profile" component={ProfileStackNav} 
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="clipboard-list" size= {size} color= {color} />
