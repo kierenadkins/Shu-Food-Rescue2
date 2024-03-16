@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View, SafeAreaView, Image } from "react-native";
+import { Text, TextInput, TouchableOpacity, View, SafeAreaView, Image, KeyboardAvoidingView } from "react-native";
 import { useSignUp } from "@clerk/clerk-expo";
 
 export default function SignUpScreen() {
@@ -11,6 +11,8 @@ export default function SignUpScreen() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordsMatch, setPasswordsMatch] = useState(true); // New state variable
+  const [passwordValidationError, setPasswordValidationError] = useState(""); // New state variable
+  const [emailValidationError, setEmailValidationError] = useState(""); // New state variable
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
 
@@ -18,6 +20,20 @@ export default function SignUpScreen() {
   const onSignUpPress = async () => {
     if (!isLoaded || password !== confirmPassword) {
       setPasswordsMatch(false); // Set passwordsMatch to false if passwords don't match
+      return;
+    }
+
+    // Validate password
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,})/;
+    if (!passwordRegex.test(password)) {
+      setPasswordValidationError("Password must contain at least one capital letter and one special character.");
+      return;
+    }
+
+    // Validate email
+    const emailRegex = /@student.shu.ac.uk$/;
+    if (!emailRegex.test(emailAddress)) {
+      setEmailValidationError("Email must be from @student.shu.ac.uk domain.");
       return;
     }
 
@@ -57,85 +73,105 @@ export default function SignUpScreen() {
   };
 
   return (
-    <SafeAreaView className="bg-white flex-1 ">
-      {!pendingVerification && (
-        <View className ="p-8">
-          <View>
-            <Image source={require('./../../../assets/shu-logo.jpg')} className="w-full h-[200px] object-cover"></Image>
-          </View>
-          <View className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:border-blue-500 mb-4">
-            <TextInput
-              autoCapitalize="none"
-              value={firstName}
-              placeholder="First Name..."
-              onChangeText={(firstName) => setFirstName(firstName)}
-            />
-          </View>
-          <View className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:border-blue-500 mb-4">
-            <TextInput
-              autoCapitalize="none"
-              value={lastName}
-              placeholder="Last Name..."
-              onChangeText={(lastName) => setLastName(lastName)}
-            />
-          </View>
-          <View className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:border-blue-500 mb-4">
-            <TextInput
-              autoCapitalize="none"
-              value={emailAddress}
-              placeholder="Email..."
-              onChangeText={(email) => setEmailAddress(email)}
-            />
-          </View>
-
-          <View className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:border-blue-500 mb-4">
-            <TextInput
-              value={password}
-              placeholder="Password..."
-              placeholderTextColor="#000"
-              secureTextEntry={true}
-              onChangeText={(password) => setPassword(password)}
-            />
-          </View>
-
-          <View className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:border-blue-500 mb-4">
-            <TextInput
-              value={confirmPassword}
-              placeholder="Confirm Password..." // New password confirmation field
-              placeholderTextColor="#000"
-              secureTextEntry={true}
-              onChangeText={(confirmPassword) => {
-                setConfirmPassword(confirmPassword);
-                setPasswordsMatch(true); // Reset passwordsMatch state when user changes confirm password
-              }}
-            />
-          </View>
-
-          {!passwordsMatch && (
-            <Text style={{ color: 'red', marginBottom: 10 }}>
-              Passwords do not match. Please try again.
-            </Text>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+      <KeyboardAvoidingView>
+          {!pendingVerification && (
+            <View style={{ padding: 20 }}>
+              <View>
+                <Image source={require('./../../../assets/shu-logo.jpg')} style={{ width: '100%', height: 200, objectFit: 'cover' }} />
+              </View>
+              <View style={{ border: '1px solid #ccc', borderRadius: 5, marginBottom: 10 }}>
+                <TextInput
+                  autoCapitalize="none"
+                  value={firstName}
+                  placeholder="First Name..."
+                  onChangeText={(firstName) => setFirstName(firstName)}
+                  style={{ padding: 10 }}
+                />
+              </View>
+              <View style={{ border: '1px solid #ccc', borderRadius: 5, marginBottom: 10 }}>
+                <TextInput
+                  autoCapitalize="none"
+                  value={lastName}
+                  placeholder="Last Name..."
+                  onChangeText={(lastName) => setLastName(lastName)}
+                  style={{ padding: 10 }}
+                />
+              </View>
+              <View style={{ border: '1px solid #ccc', borderRadius: 5, marginBottom: 10 }}>
+                <TextInput
+                  autoCapitalize="none"
+                  value={emailAddress}
+                  placeholder="Email..."
+                  onChangeText={(email) => setEmailAddress(email)}
+                  style={{ padding: 10 }}
+                />
+              </View>
+              <View style={{ border: '1px solid #ccc', borderRadius: 5, marginBottom: 10 }}>
+                <TextInput
+                  value={password}
+                  placeholder="Password..."
+                  placeholderTextColor="#000"
+                  secureTextEntry={true}
+                  onChangeText={(password) => setPassword(password)}
+                  style={{ padding: 10 }}
+                />
+              </View>
+              <View style={{ border: '1px solid #ccc', borderRadius: 5, marginBottom: 10 }}>
+                <TextInput
+                  value={confirmPassword}
+                  placeholder="Confirm Password..." // New password confirmation field
+                  placeholderTextColor="#000"
+                  secureTextEntry={true}
+                  onChangeText={(confirmPassword) => {
+                    setConfirmPassword(confirmPassword);
+                    setPasswordsMatch(true); // Reset passwordsMatch state when user changes confirm password
+                  }}
+                  style={{ padding: 10 }}
+                />
+              </View>
+              {!passwordsMatch && (
+                <Text style={{ color: 'red', marginBottom: 10 }}>
+                  Passwords do not match. Please try again.
+                </Text>
+              )}
+              {passwordValidationError !== "" && (
+                <Text style={{ color: 'red', marginBottom: 10 }}>
+                  {passwordValidationError}
+                </Text>
+              )}
+              {emailValidationError !== "" && (
+                <Text style={{ color: 'red', marginBottom: 10 }}>
+                  {emailValidationError}
+                </Text>
+              )}
+              <TouchableOpacity
+                style={{ backgroundColor: 'blue', padding: 10, borderRadius: 5, alignItems: 'center', marginTop: 10 }}
+                onPress={onSignUpPress}
+              >
+                <Text style={{ color: 'white' }}>Sign up</Text>
+              </TouchableOpacity>
+            </View>
           )}
-
-          <TouchableOpacity className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline md:py-3 md:px-6"  onPress={onSignUpPress}>
-            <Text>Sign up</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-      {pendingVerification && (
-        <View className ="flex items-center justify-center h-screen p-8">
-          <View className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:border-blue-500 mb-4">
-            <TextInput
-              value={code}
-              placeholder="Code..."
-              onChangeText={(code) => setCode(code)}
-            />
-          </View>
-          <TouchableOpacity className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:border-blue-500 mb-4" onPress={onPressVerify}>
-            <Text>Verify Email</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+          {pendingVerification && (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
+              <View style={{ border: '1px solid #ccc', borderRadius: 5, marginBottom: 10 }}>
+                <TextInput
+                  value={code}
+                  placeholder="Code..."
+                  onChangeText={(code) => setCode(code)}
+                  style={{ padding: 10 }}
+                />
+              </View>
+              <TouchableOpacity
+                style={{ border: '1px solid #ccc', borderRadius: 5, marginBottom: 10, backgroundColor: 'blue', padding: 10 }}
+                onPress={onPressVerify}
+              >
+                <Text style={{ color: 'white' }}>Verify Email</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
