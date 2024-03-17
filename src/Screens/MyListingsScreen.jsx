@@ -28,12 +28,6 @@ export default function MyListingsScreen() {
     setLoading(false);
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      getUserListing();
-    }, [])
-  );
-
   return (
     <View className="flex-1">
       <View className="m-1">
