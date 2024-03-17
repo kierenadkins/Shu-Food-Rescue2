@@ -36,8 +36,7 @@ export default function SignUpScreen() {
       setEmailValidationError("Email must be from @student.shu.ac.uk domain.");
       return;
     }
-
-    try {
+      try {
       await signUp.create({
         firstName,
         lastName,
