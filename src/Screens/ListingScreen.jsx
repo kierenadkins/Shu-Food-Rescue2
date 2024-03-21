@@ -6,18 +6,34 @@ import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { app } from '../../firebaseConfig';
 import { useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
+import Constants from '../consts/consts';
 
 export default function ListingScreen() {
   const db = getFirestore(app);
   const [listings, setListings] = useState([]);
+  const [pageState, setPageState] = useState("Student Food");
 
   const getListings = async () => {
     setListings([]);
     const querySnapshot = await getDocs(collection(db, "listings"));
     const newListings = [];
+    const today = new Date().toISOString();
     querySnapshot.forEach((doc) => {
       console.log(`${doc.id} => ${doc.data()}`);
-      newListings.push(doc.data());
+      
+      const data = doc.data();
+
+      if(data.foodDateType == "Use By"){
+        const milliseconds = (data.foodDate.seconds * 1000) + (data.foodDate.nanoseconds / 1000000);
+        const listingDate = new Date(milliseconds).toISOString();
+
+        if (listingDate => today) {
+          newListings.push(data);
+        }
+      }
+      else{
+        newListings.push(doc.data());
+      }
     });
     setListings(newListings);
   }
