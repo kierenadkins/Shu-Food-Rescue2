@@ -5,6 +5,7 @@ import { useUser } from '@clerk/clerk-expo';
 import { collection, deleteDoc, getFirestore, query, where, getDocs, updateDoc } from 'firebase/firestore'; // Added missing imports
 import { app } from '../../firebaseConfig';
 import Constants from '../consts/consts';
+import uuid from 'react-native-uuid';
 
 export default function ListingViewScreen() {
   const { params } = useRoute();
@@ -30,7 +31,8 @@ export default function ListingViewScreen() {
         } else {
           const newData = { 
             status: Constants.ListingStatus.PendingCollection, 
-            reservationUserId: user.id 
+            reservationUserId: user.id,
+            reservationId: uuid.v4()
           };
           await updateDoc(docRef, newData);
           console.log("Successfully reserved");

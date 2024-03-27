@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Image, StyleSheet, ScrollView, Text } from 'react-native';
 import FoodInformation from "./../Components/Food Listing/Food-Information";
 import FoodHeader from "./../Components/Food Listing/Food-Header";
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
 import { app } from '../../firebaseConfig';
 import { useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
@@ -15,7 +15,14 @@ export default function ListingScreen() {
 
   const getListings = async () => {
     setListings([]);
-    const querySnapshot = await getDocs(collection(db, "listings"));
+
+    const q = query(
+      collection(db, "listings"),
+      where("status", "==", Constants.ListingStatus.Active)
+    );
+
+    const querySnapshot = await getDocs(q);
+
     const newListings = [];
     const today = new Date().toISOString();
     querySnapshot.forEach((doc) => {

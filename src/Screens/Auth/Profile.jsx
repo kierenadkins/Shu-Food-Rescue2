@@ -25,7 +25,7 @@ export default function Profile() {
         id: 2,
         name: "Reserved",
         icon: chats,
-        path: 'my-listings-tab'
+        path: 'reservation-tab'
     },
     {
         id: 3,
