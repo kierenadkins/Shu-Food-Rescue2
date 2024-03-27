@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Image, ScrollView, Alert, KeyboardAvoidingView } from 'react-native';
+import Checkbox from 'expo-checkbox';
 import { app } from '../../firebaseConfig';
 import { getFirestore, getDocs, collection, addDoc } from "firebase/firestore";
 import { Formik } from 'formik';
@@ -21,6 +22,7 @@ export default function AddFoodScreen() {
   const [images, setImages] = useState([]); // State to hold multiple images
   const today = new Date();
   const {user} = useUser();
+  const [toggleCheckBox, setToggleCheckBox] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -116,8 +118,15 @@ export default function AddFoodScreen() {
         }
       }));
   
-      values.userFirstName = user.firstName;
-      values.userLastName = user.lastName;
+      if(!toggleCheckBox){
+        values.userFirstName = user.firstName;
+        values.userLastName = user.lastName;
+      }
+      else{
+        values.userFirstName = "Annoymous";
+        values.userLastName = " ";
+      }
+
       values.userId = user.id;
       values.listingType = Constants.ListingType.Student.toString();
       values.status = Constants.ListingStatus.Active.toString();
@@ -266,6 +275,17 @@ export default function AddFoodScreen() {
                 />
                 {errors.location && <Text style={styles.error}>{errors.location}</Text>}
               </View>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Checkbox    
+                  disabled={false}
+                  value={toggleCheckBox}
+                  onValueChange={(newValue) => setToggleCheckBox(newValue)}
+                />
+                <Text style={{ marginLeft: 8 }}>Stay Anonymous?</Text>
+            </View>
+
+
+              
               <TouchableOpacity onPress={handleSubmit} className="p-3 w-48 bg-white rounded-3xl border border-black mt-10 ">
                 <Text className="text-black text-center text-[16px] ">Submit</Text>
               </TouchableOpacity>
