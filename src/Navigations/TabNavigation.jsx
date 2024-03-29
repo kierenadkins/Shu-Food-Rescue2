@@ -1,15 +1,13 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../Screens/HomeScreen';
-import ListingScreen from '../Screens/ListingScreen';
 import AddFoodScreen from '../Screens/AddListingScreen';
-import RecipeScreen from '../Screens/RecipeScreen';
 import LeftHeader from '../Components/Header/LeftHeader';
 import RightHeader from '../Components/Header/RightHeader';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ListingScreenNavi from './ListingStackNavigation';
-import Profile from '../Screens/Auth/Profile';
 import ProfileStackNav from './ProfileStackNav';
+import RecipeStackNavigation from './RecipeStackNavigation';
 
 const Tab = createBottomTabNavigator();
 
@@ -49,7 +47,7 @@ export default function TabNavigation() {
           )
         }}
       />
-      <Tab.Screen name="Recipes" component={RecipeScreen} 
+      <Tab.Screen name="Recipes" component={RecipeStackNavigation} 
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="chef-hat" size= {size} color= {color} />

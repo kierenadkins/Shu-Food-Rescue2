@@ -33,6 +33,7 @@ const SubmitButton = ({ onPress, disabled }) => {
 
 const Recipes = () => {
   const [inputs, setInputs] = useState(["", "", ""]);
+  const [recipes, setRecipes] = useState();
 
   const handleInputChange = (text, index) => {
     const newInputs = [...inputs];
@@ -69,7 +70,9 @@ const Recipes = () => {
       }
 
       const data = await response.json();
-      console.log('Recipes:', data);
+      setRecipes(data);
+      console.log('Recipes:', recipes);
+      
     } catch (error) {
       console.error('Error fetching recipes:', error);
     }
