@@ -113,7 +113,7 @@ export default function ListingViewScreen() {
         <View className="flex-1">
           <Text className="text-lg font-bold text-center pb-2">{params.listinginfo.title}</Text>
 
-          <View className="h-1/4 border border-black rounded-lg mb-4">
+          <View className="w-80 h-36 bg-white rounded-lg shadow border border-black">
             <ScrollView horizontal>
               {params.listinginfo.images.map((uri, index) => (
                 <View key={index} className="flex-row justify-center relative">
@@ -122,16 +122,23 @@ export default function ListingViewScreen() {
               ))}
             </ScrollView>
           </View>
-          <View>
-            <Text>{params.listinginfo.description}</Text>
+          <Text>Description</Text>
+          <View className="w-80 h-auto bg-white rounded-lg shadow border border-black p-2 ">
+            <Text className="flex-wrap">{params.listinginfo.description} "hrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr d d d d d d "</Text>
           </View>
-          <View>
+
+          <Text>Food Date</Text>
+          <View className="w-80 h-10 bg-white rounded-lg shadow border border-black">
             <Text>Food Date</Text>
           </View>
-          <View>
+
+          <Text>Location</Text>
+          <View className="w-80 h-10 bg-white rounded-lg shadow border border-black">
             <Text>Location</Text>
           </View>
-          <View>
+
+          <Text>Type</Text>
+          <View className="w-80 h-10 bg-white rounded-lg shadow border border-black">
             <Text>Type</Text>
           </View>
           <View>

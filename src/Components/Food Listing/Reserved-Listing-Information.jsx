@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { collection, query, where, getDocs, updateDoc, getFirestore } from 'firebase/firestore'; // Import Firestore functions according to your Firebase setup
 import Constants from '../../consts/consts'; // Import your constants file
 import {app} from "../../../firebaseConfig";
+import { Ionicons } from '@expo/vector-icons';
 
 
 export default function ReservedListingInformation ({ listings }) {
@@ -40,7 +41,8 @@ export default function ReservedListingInformation ({ listings }) {
   
         const newData = { 
           status: Constants.ListingStatus.Active, 
-          reservationUserId: null 
+          reservationUserId: null,
+          reservationId: null
         };
           await updateDoc(docRef, newData);
           console.log("Successfully cancelled reserved");
@@ -79,9 +81,12 @@ export default function ReservedListingInformation ({ listings }) {
               </View>
               <View style={styles.row}>
                 <Text style={styles.subtitle}>{listing.location}</Text>
-                <TouchableOpacity onPress={() => chat(index)}>
-                    <Text style={styles.subtitle}>Chat</Text>
-                  </TouchableOpacity>
+
+                  <TouchableOpacity onPress={() => chat(index)} style={styles.buttonContainer}>
+                    {/* Icon component */}
+                      <Ionicons name="chatbubble-outline" size={24} color="black" />
+                      <Text style={styles.subtitle}>Chat</Text>
+                    </TouchableOpacity>
                 
               </View>
             </View>
