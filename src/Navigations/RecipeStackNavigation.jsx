@@ -8,9 +8,9 @@ const Stack = createStackNavigator();
 export default function RecipeStackNavigation() {
   return (
     <Stack.Navigator>
-      <Stack.Screen  name="Recipes" component={Recipes} />
-      <Stack.Screen  name="Suggestions" component={RecipeSuggestionScreen} />
-      <Stack.Screen  name="Recipe" component={RecipeViewScreen} />
+      <Stack.Screen name="RecipesScreen" component={Recipes} />
+      <Stack.Screen name="Suggestions" initialParams={{ Suggestions: [] }}/>
+      <Stack.Screen name="RecipeView" component={RecipeViewScreen} />
     </Stack.Navigator>
   );
 }

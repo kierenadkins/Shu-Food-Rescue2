@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, TextInput } from 'react-native';
 
@@ -34,6 +35,7 @@ const SubmitButton = ({ onPress, disabled }) => {
 const Recipes = () => {
   const [inputs, setInputs] = useState(["", "", ""]);
   const [recipes, setRecipes] = useState();
+  const navigation = useNavigation();
 
   const handleInputChange = (text, index) => {
     const newInputs = [...inputs];
@@ -64,19 +66,24 @@ const Recipes = () => {
           },
         }
       );
-
+  
       if (!response.ok) {
         throw new Error('Failed to fetch recipes');
       }
-
+  
       const data = await response.json();
       setRecipes(data);
-      console.log('Recipes:', recipes);
-      
+  
+      // Move the navigation inside the state update callback or useEffect
+      // This ensures that navigation occurs after the state is updated
+      //console.log('Recipes:', data); // Logging the fetched data instead of recipes state
+      navigation.navigate('Suggestions', { Suggestions: data });
+        
     } catch (error) {
       console.error('Error fetching recipes:', error);
     }
   };
+  
 
   return (
     <View style={styles.container}>
