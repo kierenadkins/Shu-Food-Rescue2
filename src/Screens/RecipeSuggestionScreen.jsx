@@ -28,20 +28,20 @@ export default function RecipeSuggestionScreen({ route }) {
   
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      <View>
-        <Text>RecipeSuggestionScreen</Text>
-        {/* Displaying Suggestions or a loading indicator */}
-        {!loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
-        ) : (
-          <>
-            {extactData.map((recipe, index) => (
-              <RecipeCard key={index} recipe={recipe} />
-            ))}
-          </>
-        )}
-      </View>
+    <ScrollView>
+      <Text className="text-sm text-balance text-center font-bold break-words">
+        Based on your leftover food, please find attached the best recipes
+      </Text> 
+{!loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <>
+          {extactData.map((recipe, index) => (
+            <RecipeCard key={index} recipe={recipe} />
+          ))}
+        </>
+      )}
     </ScrollView>
   );
-};
+  
+}

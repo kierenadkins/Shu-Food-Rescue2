@@ -9,7 +9,7 @@ export default function RecipeStackNavigation() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="RecipesScreen" component={Recipes} />
-      <Stack.Screen name="Suggestions" initialParams={{ Suggestions: [] }}/>
+      <Stack.Screen name="Suggestions" component={RecipeSuggestionScreen} initialParams={{ Suggestions: [] }}/>
       <Stack.Screen name="RecipeView" component={RecipeViewScreen} />
     </Stack.Navigator>
   );
