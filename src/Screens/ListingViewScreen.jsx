@@ -36,7 +36,8 @@ export default function ListingViewScreen() {
           };
           await updateDoc(docRef, newData);
           console.log("Successfully reserved");
-          reservedAlert();
+          console.log(newData);
+          reservedAlert(newData.reservationId);
         }
       });
   
@@ -62,11 +63,11 @@ export default function ListingViewScreen() {
     ])
   };
 
-  const reserveListingAlert = () => {
+  const reserveListingAlert = (id) => {
     Alert.alert("Do you want to resevere this item", "Are you sure?", [
       {
         text: "yes",
-        onPress: () => reservePost()
+        onPress: () => reservePost(id)
       },
       {
         text: "no",
@@ -84,11 +85,12 @@ export default function ListingViewScreen() {
     ])
   };
 
-  const reservedAlert = () => {
+  const reservedAlert = (id) => {
+    console.log(id);
     Alert.alert("You have successfully reserved this listing", "Please message the user for collection", [
       {
         text: "ok",
-        onPress: () => navigation.goBack()
+        onPress: () => navigation.push('Chat', { listingId: id })
       },
     ])
   };
