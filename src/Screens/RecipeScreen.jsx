@@ -11,7 +11,7 @@ const IngredientInput = ({ value, onChangeText, onRemove, index }) => {
         value={value}
         onChangeText={onChangeText}
       />
-      {index >= 2 && (
+      {index >= 3 && (
         <TouchableOpacity onPress={onRemove} style={styles.removeButtonContainer}>
           <Text style={styles.removeButton}>x</Text>
         </TouchableOpacity>
@@ -50,7 +50,7 @@ const Recipes = () => {
   };
 
   const removeInput = (indexToRemove) => {
-    if (indexToRemove >= 2) {
+    if (indexToRemove >= 3) {
       setInputs(inputs.filter((_, index) => index !== indexToRemove));
     }
   };
