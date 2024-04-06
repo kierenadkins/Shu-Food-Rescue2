@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, TouchableOpacity, Alert, ScrollView, SafeAreaView } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useUser } from '@clerk/clerk-expo';
-import { collection, deleteDoc, getFirestore, query, where, getDocs, updateDoc } from 'firebase/firestore'; // Added missing imports
+import { collection, deleteDoc, getFirestore, query, where, getDocs, updateDoc } from 'firebase/firestore';
 import { app } from '../../firebaseConfig';
 import Constants from '../consts/consts';
 import uuid from 'react-native-uuid';
@@ -12,10 +12,17 @@ export default function ListingViewScreen() {
   const { user } = useUser();
   const navigation = useNavigation();
   const db = getFirestore(app);
+  const [date, setDate] = useState();
 
   useEffect(() => {
     console.log(params);
-  }, []);
+    // Check if params has data and foodDate
+    if (params) {
+      const milliseconds = (params.listinginfo.foodDate.seconds * 1000) + (params.listinginfo.foodDate.nanoseconds / 1000000);
+      const listingDate = new Date(milliseconds).toDateString();
+      setDate(listingDate);
+    }
+  }, [params]);
 
   const reservePost = async () => {
     try {
@@ -46,31 +53,28 @@ export default function ListingViewScreen() {
       // Handle the error appropriately
     }
   };
-  
-  
-  
 
   const deleteUserPostAlert = () => {
     Alert.alert("Do you want to delete?", "Are you sure?", [
       {
-        text: "yes",
+        text: "Yes",
         onPress: () => deleteFromDatabase()
       },
       {
-        text: "no",
+        text: "No",
         style: 'cancel',
       }
     ])
   };
 
   const reserveListingAlert = (id) => {
-    Alert.alert("Do you want to resevere this item", "Are you sure?", [
+    Alert.alert("Do you want to reserve this item?", "Are you sure?", [
       {
-        text: "yes",
+        text: "Yes",
         onPress: () => reservePost(id)
       },
       {
-        text: "no",
+        text: "No",
         style: 'cancel',
       }
     ])
@@ -79,7 +83,7 @@ export default function ListingViewScreen() {
   const reserveListingNoLongerAvailableAlert = () => {
     Alert.alert("This Item Is No Longer Available", [
       {
-        text: "ok",
+        text: "OK",
         onPress: () => navigation.goBack()
       },
     ])
@@ -87,9 +91,9 @@ export default function ListingViewScreen() {
 
   const reservedAlert = (id) => {
     console.log(id);
-    Alert.alert("You have successfully reserved this listing", "Please message the user for collection", [
+    Alert.alert("Success!", "You have successfully reserved this listing. Please message the user for collection.", [
       {
-        text: "ok",
+        text: "OK",
         onPress: () => navigation.push('Chat', { listingId: id })
       },
     ])
@@ -104,61 +108,48 @@ export default function ListingViewScreen() {
         console.log("Deleted");
         navigation.goBack();
       }).catch(error => {
-        console.error("Error deleting document: ", error); // Handle error if delete operation fails
+        console.error("Error deleting document: ", error);
       });
     });
   };
 
   return (
-    <View className="flex-1 items-center">
-      <View className="border-2 border-black rounded-lg w-11/12 h-5/6 p-6">
-        <View className="flex-1">
-          <Text className="text-lg font-bold text-center pb-2">{params.listinginfo.title}</Text>
-
-          <View className="w-80 h-36 bg-white rounded-lg shadow border border-black">
-            <ScrollView horizontal>
+    <SafeAreaView className="flex-1 bg-white">
+      <View className="flex-1">
+        <ScrollView contentContainerClassName="flex-grow">
+          <View className="p-4">
+            <Text className="text-2xl font-bold text-center mb-4">{params.listinginfo.title}</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-4">
               {params.listinginfo.images.map((uri, index) => (
-                <View key={index} className="flex-row justify-center relative">
-                  <Image source={{ uri }} style={{width: 125, height: "90%", borderRadius: 15, borderWidth: 1, borderColor: "black" }} />
-                </View>
+                <Image key={index} source={{ uri }} className="w-52 h-52 rounded-lg mr-4" />
               ))}
             </ScrollView>
+            <Text className="text-lg mb-2">Description</Text>
+            <View className="bg-gray-200 p-2 rounded-lg mb-4">
+              <Text>{params.listinginfo.description}</Text>
+            </View>
+            <Text className="text-lg mb-2">Food Date</Text>
+            <View className="bg-gray-200 p-2 rounded-lg mb-4">
+              <Text>{params.listinginfo.foodDateType}: {date}</Text>
+            </View>
+            <Text className="text-lg mb-2">Location</Text>
+            <View className="bg-gray-200 p-2 rounded-lg mb-4">
+              <Text>{params.listinginfo.location}</Text>
+            </View>
           </View>
-          <Text>Description</Text>
-          <View className="w-80 h-auto bg-white rounded-lg shadow border border-black p-2 ">
-            <Text className="flex-wrap">{params.listinginfo.description} "hrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr d d d d d d "</Text>
-          </View>
-
-          <Text>Food Date</Text>
-          <View className="w-80 h-10 bg-white rounded-lg shadow border border-black">
-            <Text>Food Date</Text>
-          </View>
-
-          <Text>Location</Text>
-          <View className="w-80 h-10 bg-white rounded-lg shadow border border-black">
-            <Text>Location</Text>
-          </View>
-
-          <Text>Type</Text>
-          <View className="w-80 h-10 bg-white rounded-lg shadow border border-black">
-            <Text>Type</Text>
-          </View>
-          <View>
-            <Text>User Name & User Rating</Text>
-            <Text>Date Posted</Text>
-          </View>
-
-          {user?.id == params.listinginfo.userId ? (
-            <TouchableOpacity onPress={deleteUserPostAlert} className="p-3 w-36 bg-red-500 rounded-lg mt-4 self-center">
-              <Text className="text-white text-center text-base">Delete</Text>
+        </ScrollView>
+        <View className="absolute bottom-8 left-1/4 w-1/2">
+          {user?.id === params.listinginfo.userId ? (
+            <TouchableOpacity onPress={deleteUserPostAlert} className="bg-red-500 py-4 px-6 rounded-full ">
+              <Text className="text-white text-center text-lg">Delete</Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity onPress={reserveListingAlert} className="p-3 w-36 bg-white border-2 border-black rounded-lg mt-4 self-center">
-              <Text className="text-black text-center text-base">Reserve</Text>
+            <TouchableOpacity onPress={reserveListingAlert} className="bg-green-500 py-4 px-6 rounded-full  ">
+              <Text className="text-white text-center text-lg">Reserve</Text>
             </TouchableOpacity>
           )}
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

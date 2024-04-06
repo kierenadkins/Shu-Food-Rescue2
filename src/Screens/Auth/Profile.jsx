@@ -40,6 +40,11 @@ export default function Profile() {
     }
   ];
 
+  const onPressPrivacy = () => {
+    navigation.navigate("Privacy Notice");
+  }
+  
+
   const onTouchablePress = async (item) => {
     if (item.path) {
       navigation.navigate(item.path);
@@ -74,6 +79,9 @@ export default function Profile() {
           </TouchableOpacity>
         )}
       />
+      <TouchableOpacity onPress={onPressPrivacy} className="items-center">
+        <Text className="text-cyan-800">Privacy Notice</Text>
+      </TouchableOpacity>
     </View>
   );
 }

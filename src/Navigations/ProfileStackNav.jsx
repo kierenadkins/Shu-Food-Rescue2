@@ -6,6 +6,7 @@ import MyListingsScreen from '../Screens/MyListingsScreen';
 import ListingViewScreen from '../Screens/ListingViewScreen';
 import ReservationViewScreen from '../Screens/ReservationViewScreen';
 import ChatScreen from '../Screens/ChatScreen';
+import PrivacyNoticeScreen from '../Screens/PrivacyNoticeScreen';
 
 const Stack = createStackNavigator();
 export default function ProfileStackNav() {
@@ -15,6 +16,7 @@ export default function ProfileStackNav() {
     <Stack.Screen name='my-listings-tab' component={MyListingsScreen} />
     <Stack.Screen  name="reservation-tab" component={ReservationViewScreen} />
     <Stack.Screen name="Chat" component={ChatScreen} />
+    <Stack.Screen name="Privacy Notice" component={PrivacyNoticeScreen} />
     </Stack.Navigator>
 
   )
