@@ -3,11 +3,11 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-na
 import { useNavigation } from '@react-navigation/native';
 import { collection, query, where, getDocs, updateDoc, getFirestore } from 'firebase/firestore'; // Import Firestore functions according to your Firebase setup
 import Constants from '../../consts/consts'; // Import your constants file
-import {app} from "../../../firebaseConfig";
-import { Ionicons } from '@expo/vector-icons';
+import { app } from "../../../firebaseConfig";
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 
 
-export default function ReservedListingInformation ({ listings }) {
+export default function ReservedListingInformation({ listings }) {
   const navigation = useNavigation();
   const db = getFirestore(app);
 
@@ -34,63 +34,75 @@ export default function ReservedListingInformation ({ listings }) {
     try {
       const q = query(collection(db, "listings"), where("title", "==", listings[index].title));
       const snapshot = await getDocs(q);
-  
+
       snapshot.forEach(async doc => {
         const docRef = doc.ref;
         const docData = doc.data();
-  
-        const newData = { 
-          status: Constants.ListingStatus.Active, 
+
+        const newData = {
+          status: Constants.ListingStatus.Active,
           reservationUserId: null,
           reservationId: null
         };
-          await updateDoc(docRef, newData);
-          console.log("Successfully cancelled reserved");
-          navigation.goBack();
+        await updateDoc(docRef, newData);
+        console.log("Successfully cancelled reserved");
+        navigation.goBack();
       });
-  
+
     } catch (error) {
       console.error("Error occurred while reserving post:", error);
       // Handle the error appropriately
     }
   };
 
+  const LeaveReview = () => {
+    // Define your LeaveReview function here
+    // You haven't provided this function in your code snippet
+  };
+
   return (
     <View style={styles.container}>
       {listings.map((listing, index) => (
-          <View style={styles.rectangle}>
-            <View style={styles.imageContainer}>
-              <Image
-                source={{ uri: listing.images[0] }}
-                style={styles.image}
-              />
-            </View>
-            <View style={styles.textContainer}>
-              <View>
+        <View style={styles.rectangle} key={index}>
+          <View style={styles.imageContainer}>
+            <Image
+              source={{ uri: listing.images[0] }}
+              style={styles.image}
+            />
+          </View>
+          <View style={styles.textContainer}>
+            <View>
               <View style={styles.row}>
                 <Text style={styles.title}>{listing.title}</Text>
                 <Text style={styles.title}>X</Text>
               </View>
-                <View style={styles.row}>
-                  <Text style={styles.subtitle}>{listing.userFirstName} {listing.userLastName}</Text>
-                  <TouchableOpacity onPress={() => cancelReservation(index)}>
-                    <Text style={styles.subtitle}>Cancel</Text>
-                  </TouchableOpacity>
-
-                </View>
-              </View>
               <View style={styles.row}>
-                <Text style={styles.subtitle}>{listing.location}</Text>
-
-                  <TouchableOpacity onPress={() => chat(index)} style={styles.buttonContainer}>
-                    {/* Icon component */}
-                      <Ionicons name="chatbubble-outline" size={24} color="black" />
-                      <Text style={styles.subtitle}>Chat</Text>
-                    </TouchableOpacity>
-                
+                <Text style={styles.subtitle}>{listing.userFirstName} {listing.userLastName}</Text>
+                <TouchableOpacity onPress={() => cancelReservation(index)}>
+                  <Text style={styles.subtitle}>Cancel</Text>
+                </TouchableOpacity>
               </View>
             </View>
+            <View style={styles.row}>
+              <Text style={styles.subtitle}>{listing.location}</Text>
+              {listing.status === "Collected" && (
+                <TouchableOpacity onPress={() => LeaveReview()} style={styles.buttonContainer}>
+                  {/* I assume you have defined MaterialIcons somewhere */}
+                  {/* <MaterialIcons name="rate-review" size={24} color="black" /> */}
+                  <Text style={styles.subtitle}>Leave Review</Text>
+                </TouchableOpacity>
+              )}
+              {/* Corrected the condition here */}
+              {listing.status !== "Collected" && (
+                <TouchableOpacity onPress={() => chat(index)} style={styles.buttonContainer}>
+                  {/* Icon component */}
+                  <Ionicons name="chatbubble-outline" size={24} color="black" />
+                  <Text style={styles.subtitle}>Chat</Text>
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
+        </View>
       ))}
     </View>
   );
@@ -112,7 +124,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 4,
-    marginBottom: 10, 
+    marginBottom: 10,
   },
   imageContainer: {
     flex: 1,

@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { collection, query, where, getDocs, updateDoc, getFirestore, deleteDoc } from 'firebase/firestore';
 import Constants from '../../consts/consts';
 import { app } from "../../../firebaseConfig";
-import { Ionicons, MaterialCommunityIcons, MaterialIcons, Entypo } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 
 export default function MyListing({ listings }) {
   const navigation = useNavigation();
@@ -124,13 +124,6 @@ export default function MyListing({ listings }) {
                 <MaterialCommunityIcons name="delete-outline" size={24} color="black" />
                 <Text style={styles.subtitle}>Delete</Text>
               </TouchableOpacity>
-
-              {listing.status === "Collected" && (
-                <TouchableOpacity onPress={() => LeaveReview(index)} style={styles.buttonContainer}>
-                  <MaterialIcons name="rate-review" size={24} color="black" />
-                  <Text style={styles.subtitle}>Leave Review</Text>
-                </TouchableOpacity>
-              )}
             </View>
           </View>
         </View>
