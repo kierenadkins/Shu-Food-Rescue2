@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Rating from '../Ratings/RatingStar';
 
 export default function FoodInformation ({ listings }) {
   const navigation = useNavigation();
@@ -25,7 +26,7 @@ export default function FoodInformation ({ listings }) {
                 <Text style={styles.title}>{listing.title}</Text>
                 <View style={styles.row}>
                   <Text style={styles.subtitle}>{listing.userFirstName} {listing.userLastName}</Text>
-                  <Text>Rating PLACEhOLDER</Text>
+                  <Rating rating={4.5} numReviews={150} />
                 </View>
               </View>
               <View style={styles.row}>
