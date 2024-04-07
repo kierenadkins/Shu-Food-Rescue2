@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { collection, query, where, getDocs, updateDoc, getFirestore } from 'firebase/firestore'; // Import Firestore functions according to your Firebase setup
-import Constants from '../../consts/consts'; // Import your constants file
-import { app } from "../../../firebaseConfig";
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-
+import { collection, query, where, getDocs, updateDoc, getFirestore, addDoc } from 'firebase/firestore';
+import Constants from '../../consts/consts'; 
+import { Ionicons } from '@expo/vector-icons';
+import RatingModal from '../ratingModel';
+import { app } from '../../../firebaseConfig';
 
 export default function ReservedListingInformation({ listings }) {
   const navigation = useNavigation();
   const db = getFirestore(app);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const cancelReservation = (index) => {
     Alert.alert("You are cancelling a reservation food listing", "Are you sure?", [
@@ -55,9 +56,18 @@ export default function ReservedListingInformation({ listings }) {
     }
   };
 
-  const LeaveReview = () => {
-    // Define your LeaveReview function here
-    // You haven't provided this function in your code snippet
+  const handleSubmitRating = async ({ rating, message, userId }) => {
+    try {
+      await addDoc(collection(db, 'ratings'), {
+        userId: userId,
+        ratingValue: rating,
+        message: message,
+      });
+      console.log('Rating added successfully!');
+    } catch (error) {
+      console.error('Error adding rating: ', error);
+    }
+    Alert.alert('Rating submitted, thank you for using this service!');
   };
 
   return (
@@ -86,9 +96,15 @@ export default function ReservedListingInformation({ listings }) {
             <View style={styles.row}>
               <Text style={styles.subtitle}>{listing.location}</Text>
               {listing.status === "Collected" && (
-                <TouchableOpacity onPress={() => LeaveReview()} style={styles.buttonContainer}>
-                  {/* I assume you have defined MaterialIcons somewhere */}
-                  {/* <MaterialIcons name="rate-review" size={24} color="black" /> */}
+
+                <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.buttonContainer}>
+                  <RatingModal
+                    visible={modalVisible}
+                    onClose={() => setModalVisible(false)}
+                    onSubmit={handleSubmitRating}
+                    userId = {listing.userId}
+                  />
+
                   <Text style={styles.subtitle}>Leave Review</Text>
                 </TouchableOpacity>
               )}

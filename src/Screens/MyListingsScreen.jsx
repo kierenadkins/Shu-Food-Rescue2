@@ -3,9 +3,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { collection, getFirestore, query, where, getDocs } from 'firebase/firestore';
 import { app } from '../../firebaseConfig';
 import { useUser } from '@clerk/clerk-expo';
-import FoodInformation from "./../Components/Food Listing/Food-Information";
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import ReservedListingInformation from '../Components/Food Listing/Reserved-Listing-Information';
+import { useNavigation } from '@react-navigation/native';
 import MyListing from '../Components/Food Listing/My-Listing';
 
 export default function MyListingsScreen() {
@@ -27,6 +25,7 @@ export default function MyListingsScreen() {
         console.log(`${doc.id} => ${doc.data()}`);
       });
       setMyListings(listingsData);
+
     } catch (error) {
       console.error("Error fetching user listings:", error);
     } finally {
@@ -47,7 +46,6 @@ export default function MyListingsScreen() {
           myListings.length === 0 ? (
             <Text>No listings available</Text>
           ) : (
-           // <ReservedListingInformation listings={myListings} />
            <MyListing listings={myListings}></MyListing>
           )
         )}
