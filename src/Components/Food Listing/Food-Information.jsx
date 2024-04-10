@@ -26,7 +26,7 @@ export default function FoodInformation ({ listings }) {
                 <Text style={styles.title}>{listing.title}</Text>
                 <View style={styles.row}>
                   <Text style={styles.subtitle}>{listing.userFirstName} {listing.userLastName}</Text>
-                  <Rating rating={4.5} numReviews={150} />
+                  <Rating userId={listing.userId} />
                 </View>
               </View>
               <View style={styles.row}>

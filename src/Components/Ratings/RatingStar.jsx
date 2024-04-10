@@ -5,16 +5,17 @@ import { app } from '../../../firebaseConfig';
 
 
 
-const Rating = ({ rating, numReviews }) => {
+const Rating = ({ userId }) => {
   const [averageRating, setAverageRating] = useState(0);
   const [reviewCount, setReviewCount] = useState(0);
-  const userId = "user_2dmQHShL1XRRWN0JQcQysJL8V3t"; // Specify the user ID you're interested in
   const db = getFirestore(app);
 
   useEffect(() => {
     const fetchUserReviews = async () => {
+      console.log("user id " + userId)
       const q = query(collection(db, "ratings"), where("userId", "==", userId));
       const snapshot = await getDocs(q);
+
 
       let reviewsArray = [];
       snapshot.forEach(doc => {
